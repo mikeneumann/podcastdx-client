@@ -68,8 +68,10 @@ export interface PIApiRecentEpisode extends Omit<PIApiEpisodeBase, "chaptersUrl"
 }
 
 /** Returned by searchPerson */
-export interface PIApiPersonEpisode
-  extends Omit<PIApiEpisodeInfo, "datePublishedPretty" | "duration"> {
+export interface PIApiPersonEpisode extends Omit<
+  PIApiEpisodeInfo,
+  "datePublishedPretty" | "duration"
+> {
   duration: number | null;
   feedUrl: string;
   feedAuthor: string;
