@@ -9,6 +9,8 @@
 
 **Key entry point:** [src/index.ts](../src/index.ts) - `PodcastIndexClient` class
 
+**Library vs. Program:** This is a **library package** intended to be consumed by other projects. The [`example.ts`](../example.ts) file is for developer convenience to easily showcase and test library functionality during development. It is not part of the distribution and should not be published with the package.
+
 ## Architecture
 
 ### Core Components
