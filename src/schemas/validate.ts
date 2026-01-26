@@ -259,7 +259,7 @@ async function validateResponse(
     if (validate.errors) {
       for (let j = 0; j < validate.errors.length; j += 1) {
         console.error(validate.errors[j]);
-        const dataPath = processPath(validate.errors[j].dataPath);
+        const dataPath = processPath(validate.errors[j].instancePath);
         console.error(R.path(dataPath, data));
       }
     }
