@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   verbose: true,
   preset: "ts-jest/presets/js-with-ts",
   moduleFileExtensions: ["ts", "js"],

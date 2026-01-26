@@ -282,6 +282,7 @@ export namespace ApiResponse {
 
   export type PodcastById = ApiResponse.Podcast;
   export type PodcastByUrl = ApiResponse.Podcast;
+  export type PodcastByGuid = ApiResponse.Podcast;
   export interface PodcastByItunesId {
     status: ApiResponse.Status;
     feed: PIApiItunesPodcast;
@@ -312,6 +313,7 @@ export namespace ApiResponse {
   export type EpisodesByItunesId = ApiResponse.Episodes;
   export type EpisodesByFeedId = ApiResponse.Episodes;
   export type EpisodesByFeedUrl = ApiResponse.Episodes;
+  export type EpisodesByPodcastGuid = ApiResponse.Episodes;
 
   export interface RandomEpisodes {
     status: ApiResponse.Status;

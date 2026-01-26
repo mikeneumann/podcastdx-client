@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import fetch from "node-fetch";
 import dotEnv from "dotenv";
-import { pick } from "ramda";
 
 import { track, init, register } from "./analytics";
 import logger from "./logger";
@@ -278,26 +277,25 @@ class PodcastIndexClient {
   ): Promise<ApiResponse.RecentFeeds> {
     const apiOptions: Record<string, string | number | undefined> = {
       max: options.max ?? 40,
-      ...pick(["since"], options),
     };
 
+    if (options.since !== undefined) {
+      apiOptions.since = options.since;
+    }
+
     if (options.lang) {
-      if (Array.isArray(options.lang)) {
-        apiOptions.lang = options.lang.join(",");
-      } else {
-        apiOptions.lang = options.lang;
-      }
+      apiOptions.lang = Array.isArray(options.lang) ? options.lang.join(",") : options.lang;
     }
     if (options.notCategory) {
       apiOptions.notcat = Array.isArray(options.notCategory)
         ? options.notCategory.join(",")
-        : options.notCategory;
+        : `${options.notCategory}`;
     }
 
     if (options.category) {
       apiOptions.cat = Array.isArray(options.category)
         ? options.category.join(",")
-        : options.category;
+        : `${options.category}`;
     }
 
     const result = await this.fetch<ApiResponse.RecentFeeds>("/recent/feeds", apiOptions);
@@ -414,6 +412,22 @@ class PodcastIndexClient {
     return result;
   }
 
+  /** This call returns everything we know about the feed from the feed GUID. */
+  public async podcastByGuid(guid: string): Promise<ApiResponse.PodcastByGuid> {
+    const result = await this.fetch<ApiResponse.PodcastByGuid>("/podcasts/byguid", { guid });
+    if (!result.feed.categories) {
+      result.feed.categories = {};
+    }
+
+    track("Feed by GUID", {
+      guid,
+      categoryCount: Object.keys(result.feed.categories).length,
+      status: result.status,
+    });
+
+    return result;
+  }
+
   /**
    * This call returns the podcasts/feeds that in the index that are trending.
    *
@@ -435,26 +449,25 @@ class PodcastIndexClient {
   ): Promise<ApiResponse.Trending> {
     const apiOptions: Record<string, string | number | undefined> = {
       max: options.max ?? 40,
-      ...pick(["since"], options),
     };
 
+    if (options.since !== undefined) {
+      apiOptions.since = options.since;
+    }
+
     if (options.lang) {
-      if (Array.isArray(options.lang)) {
-        apiOptions.lang = options.lang.join(",");
-      } else {
-        apiOptions.lang = options.lang;
-      }
+      apiOptions.lang = Array.isArray(options.lang) ? options.lang.join(",") : options.lang;
     }
     if (options.notCategory) {
       apiOptions.notcat = Array.isArray(options.notCategory)
         ? options.notCategory.join(",")
-        : options.notCategory;
+        : `${options.notCategory}`;
     }
 
     if (options.category) {
       apiOptions.cat = Array.isArray(options.category)
         ? options.category.join(",")
-        : options.category;
+        : `${options.category}`;
     }
 
     const result = await this.fetch<ApiResponse.Trending>("/podcasts/trending", apiOptions);
@@ -575,6 +588,43 @@ class PodcastIndexClient {
 
     track("Episodes by iTunes ID", {
       id,
+      fulltext: options.fulltext,
+      max: options.max,
+      since: options.since,
+      count: result.count,
+      length: result.items.length,
+      status: result.status,
+    });
+
+    return result;
+  }
+
+  /**
+   * If we know the Podcast GUID, this call returns all the episodes we know about for the feed.
+   * Episodes are in reverse chronological order.
+   *
+   * @param guid The Podcast GUID (podcast:guid tag value)
+   * @param options additional api options
+   */
+  public async episodesByPodcastGuid(
+    guid: string,
+    options: {
+      /** You can specify a maximum number of results to return */
+      max?: number;
+      /** You can specify a hard-coded unix timestamp, or a negative integer that represents a number of seconds prior to right now. Either way you specify, the search will start from that time and only return feeds updated since then. */
+      since?: number | Date;
+      fulltext?: boolean;
+    } = {}
+  ): Promise<ApiResponse.EpisodesByPodcastGuid> {
+    const { since, ...rest } = options;
+    const result = await this.fetch<ApiResponse.EpisodesByPodcastGuid>("/episodes/bypodcastguid", {
+      ...rest,
+      since: toEpochTimestamp(since),
+      guid,
+    });
+
+    track("Episodes by Podcast GUID", {
+      guid,
       fulltext: options.fulltext,
       max: options.max,
       since: options.since,

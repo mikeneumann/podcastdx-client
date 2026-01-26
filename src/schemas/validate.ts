@@ -1,6 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-undef */
 import Ajv from "ajv";
 import * as fs from "fs";
 import * as path from "path";
@@ -18,7 +19,7 @@ const randomValues = {
     "https://feeds.theincomparable.com/batmanuniversity",
     "https://feeds.twit.tv/twit.xml",
     "https://feeds.buzzsprout.com/217882.rss",
-    "http://mp3s.nashownotes.com/pc20rss.xml",
+    "https://mp3s.nashownotes.com/pc20rss.xml",
     "https://feeds.podcasts.dell.com/technologypowersx",
     "https://feeds.buzzsprout.com/926059.rss",
     "https://feeds.buzzsprout.com/1152806.rss",
@@ -106,7 +107,15 @@ const types: ValidationConfig[] = [
     title: "This call returns everything we know about the feed.",
     typeName: "ApiResponse.PodcastByItunesId",
   },
-  // #endregion
+  {
+    getResponse: () => client.podcastByGuid("55625c13-db0b-58d4-a0a4-e645a42bf79c"),
+    endpoint: "/api/1.0/podcasts/byguid",
+    params: {
+      guid: "podcast guid",
+    },
+    title: "This call returns everything we know about the feed from the feed GUID.",
+    typeName: "ApiResponse.PodcastByGuid",
+  }, // #endregion
   // #region Episodes
   {
     getResponse: () => client.episodesByFeedId(parseInt(getRandom("feedId"), 10)),
@@ -137,6 +146,16 @@ const types: ValidationConfig[] = [
     title:
       "If we have an itunes id on file for a feed, then this call returns all the episodes we know about for the feed, in reverse chronological order.",
     typeName: "ApiResponse.Episodes",
+  },
+  {
+    getResponse: () => client.episodesByPodcastGuid("9b024349-ccf0-5f69-a609-6b82873eab3c"),
+    endpoint: "/api/1.0/episodes/bypodcastguid",
+    params: {
+      guid: "podcast guid",
+    },
+    title:
+      "If we have a Podcast GUID, then this call returns all the episodes we know about for the feed.",
+    typeName: "ApiResponse.EpisodesByPodcastGuid",
   },
   {
     getResponse: () => client.episodeById(parseInt(getRandom("episodeId"), 10)),

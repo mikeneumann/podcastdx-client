@@ -70,6 +70,21 @@ describe("podcasts api", () => {
     });
   });
 
+  describe("podcastByGuid", () => {
+    const podcastGuid = "55625c13-db0b-58d4-a0a4-e645a42bf79c"; // Example GUID
+
+    beforeAll(async () => {
+      // You may need to adjust this GUID to a known valid one
+      // feedByGuid = await (await client.podcastByGuid(podcastGuid)).feed;
+    });
+
+    it("supports basic call", async () => {
+      const searchResult = await client.podcastByGuid(podcastGuid);
+      expect(searchResult.status).toEqual(ApiResponse.Status.Success);
+      expect(searchResult.feed).toHaveProperty("podcastGuid", podcastGuid);
+    });
+  });
+
   describe("trending", () => {
     it("returns a default of 40 feeds", async () => {
       const recentResults = await client.trending();

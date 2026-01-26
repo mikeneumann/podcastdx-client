@@ -9,11 +9,13 @@ describe("episodes api", () => {
   let episodesByFeedUrl: PIApiEpisodeInfo[];
   let episodesByFeedId: PIApiEpisodeInfo[];
   let episodesByItunesId: PIApiEpisodeInfo[];
+  //  let episodesByPodcastGuid: PIApiEpisodeInfo[];
   // TODO: Why are these types different?
   // let episodeById: ApiResponse.PodcastEpisode;
   let randomEpisode: PIApiRandomEpisode;
 
   const feedUrl = "https://feeds.theincomparable.com/batmanuniversity";
+  const podcastGuid = "ac9907f2-a748-59eb-a799-88a9c8bfb9f5";
   const feedId = 75075;
   const altFeedId = 920666;
   const iTunesId = 1441923632;
@@ -27,6 +29,7 @@ describe("episodes api", () => {
     episodesByFeedUrl = await (await client.episodesByFeedUrl(feedUrl)).items;
     episodesByFeedId = await (await client.episodesByFeedId(feedId)).items;
     episodesByItunesId = await (await client.episodesByItunesId(iTunesId)).items;
+    //    episodesByPodcastGuid = await (await client.episodesByPodcastGuid(podcastGuid)).items;
     [randomEpisode] = (await client.episodesRandom()).episodes;
   });
 
@@ -141,6 +144,49 @@ describe("episodes api", () => {
     });
     it("returns same object as byFeedUrl", async () => {
       const searchResult = await client.episodesByItunesId(iTunesId);
+      searchResult.items.forEach((episodeInfo, idx) => {
+        expect(episodeInfo).toEqual(episodesByFeedUrl[idx]);
+      });
+    });
+  });
+
+  describe("episodesByPodcastGuid", () => {
+    it("returns all items", async () => {
+      const searchResult = await client.episodesByPodcastGuid(podcastGuid);
+      expect(searchResult.items.length).toBeGreaterThan(0);
+    });
+
+    it("returns user specified max items", async () => {
+      const max = 2;
+      const searchResult = await client.episodesByPodcastGuid(podcastGuid, { max });
+      expect(searchResult.items).toHaveLength(max);
+    });
+
+    it("returns user specified items since timestamp", async () => {
+      const allItems = await client.episodesByPodcastGuid(podcastGuid, { max: 10 });
+      if (allItems.items.length > 1) {
+        const searchResult = await client.episodesByPodcastGuid(podcastGuid, {
+          since: allItems.items[1].datePublished - 1,
+        });
+        expect(searchResult.items.length).toBeGreaterThan(0);
+        expect(searchResult.items.length).toBeLessThanOrEqual(allItems.items.length);
+      }
+    });
+    it("returns user specified items since negative seconds", async () => {
+      const searchResult = await client.episodesByPodcastGuid(podcastGuid, {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        since: (toEpochTimestamp(new Date())! - episodesByFeedId[1].datePublished) * -1 - 2,
+      });
+      expect(searchResult.items).toHaveLength(2);
+    });
+    it("returns same object as byFeedId", async () => {
+      const searchResult = await client.episodesByPodcastGuid(podcastGuid);
+      searchResult.items.forEach((episodeInfo, idx) => {
+        expect(episodeInfo).toEqual(episodesByFeedId[idx]);
+      });
+    });
+    it("returns same object as byFeedUrl", async () => {
+      const searchResult = await client.episodesByPodcastGuid(podcastGuid);
       searchResult.items.forEach((episodeInfo, idx) => {
         expect(episodeInfo).toEqual(episodesByFeedUrl[idx]);
       });

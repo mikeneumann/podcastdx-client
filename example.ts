@@ -1,3 +1,5 @@
+declare const process: { env: { [key: string]: string | undefined } };
+
 import PodcastIndexClient from "./src";
 
 const client = new PodcastIndexClient({
@@ -30,9 +32,12 @@ export async function log(thennable: Promise<unknown>): Promise<void> {
   // console.log(JSON.stringify(feeds));
   // console.log(podcast.items);
 
+  // const podcast = await client.podcastByGuid("ac9907f2-a748-59eb-a799-88a9c8bfb9f5");
+  // console.log(JSON.stringify(podcast, null, 2));
+ 
   // console.log(JSON.stringify(await client.stats(), null, 2));
   // await log(client.raw("/episodes/byid?id=1258727571"));
-  // await log(client.raw("/podcasts/byfeedid?id=75075"));
+  await log(client.raw("/podcasts/byfeedid?id=75075"));
   // await log(client.raw("/podcasts/byfeedid", { id: 75075 }));
   // const result = await client.recentEpisodes({ max: 25 });
   // console.log(
@@ -43,7 +48,7 @@ export async function log(thennable: Promise<unknown>): Promise<void> {
   //   )}`
   // );
 
-  await log(client.searchPerson("Adam Curry"));
+  // await log(client.searchPerson("Adam Curry"));
 })();
 
 // 39633 categories
