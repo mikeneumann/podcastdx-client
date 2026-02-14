@@ -5,7 +5,7 @@
   "types": "dist/src/index.d.ts",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/RyanHirsch/podcastdx-client"
+    "url": "https://github.com/mikeneumann/podcastdx-client"
   },
   "scripts": {
     "prettier:base": "prettier --parser typescript",
@@ -49,6 +49,7 @@
     "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
+    "ts-json-schema-generator": "^2.4.0",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typedoc": "^0.28.16",
@@ -60,7 +61,6 @@
     "dotenv": "^8.2.0",
     "mixpanel": "^0.13.0",
     "node-fetch": "^2.6.1",
-    "ramda": "^0.28.0",
-    "typescript-json-schema": "^0.63.0"
+    "ramda": "^0.28.0"
   }
 }

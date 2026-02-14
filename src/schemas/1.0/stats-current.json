@@ -1,29 +1,34 @@
 {
   "title": "`/api/1.0/stats/current` - Get podcast index stats",
-  "type": "object",
-  "properties": {
-    "status": {
-      "type": "string",
-      "enum": [
-        "true"
-      ]
-    },
-    "stats": {
-      "$ref": "#/definitions/PIStats"
-    },
-    "description": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false,
-  "required": [
-    "description",
-    "stats",
-    "status"
-  ],
+  "$id": "ApiResponse.StatsSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/ApiResponse.Stats",
   "definitions": {
+    "ApiResponse.Stats": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/ApiResponse.Status"
+        },
+        "stats": {
+          "$ref": "#/definitions/PIStats"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "stats",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "ApiResponse.Status": {
+      "type": "string",
+      "const": "true"
+    },
     "PIStats": {
-      "description": "from stats",
       "type": "object",
       "properties": {
         "feedCountTotal": {
@@ -48,17 +53,17 @@
           "type": "number"
         }
       },
-      "additionalProperties": false,
       "required": [
-        "episodeCountTotal",
         "feedCountTotal",
+        "episodeCountTotal",
+        "feedsWithNewEpisodes3days",
         "feedsWithNewEpisodes10days",
         "feedsWithNewEpisodes30days",
-        "feedsWithNewEpisodes3days",
         "feedsWithNewEpisodes90days",
         "feedsWithValueBlocks"
-      ]
+      ],
+      "additionalProperties": false,
+      "description": "from stats"
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }

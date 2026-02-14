@@ -5,8 +5,7 @@
 import Ajv from "ajv";
 import * as fs from "fs";
 import * as path from "path";
-import * as TJS from "typescript-json-schema";
-import * as R from "ramda";
+import { createGenerator } from "ts-json-schema-generator";
 
 import PodcastIndexClient from "../index";
 
@@ -27,7 +26,6 @@ const randomValues = {
   feedId: ["286504", "555343", "854465", "75075", "453550", "448732", "710181"],
   iTunesId: ["1439743528", "1491697526", "1508189931", "977386811", "1518105204"],
   episodeId: ["1259601251", "1258177517", "1258243519", "1258315764"],
-  // "1258727571"???
 };
 
 function getRandom<K extends keyof typeof randomValues>(name: K) {
@@ -115,7 +113,8 @@ const types: ValidationConfig[] = [
     },
     title: "This call returns everything we know about the feed from the feed GUID.",
     typeName: "ApiResponse.PodcastByGuid",
-  }, // #endregion
+  },
+  // #endregion
   // #region Episodes
   {
     getResponse: () => client.episodesByFeedId(parseInt(getRandom("feedId"), 10)),
@@ -213,17 +212,9 @@ const types: ValidationConfig[] = [
   // #endregion
 ];
 
-const settings: TJS.PartialArgs = {
-  required: true,
-  noExtraProps: true,
-};
-
-const program = TJS.getProgramFromFiles([path.resolve("src/types.ts")], {
-  strict: true,
-});
 const ajv = new Ajv();
 
-function processPath(pathName: string): R.Path {
+function processPath(pathName: string): (string | number)[] {
   const pathParts = pathName
     .split(".")
     .flatMap((x) => x.split("["))
@@ -234,7 +225,7 @@ function processPath(pathName: string): R.Path {
 }
 
 async function validateResponse(
-  schema: TJS.Definition,
+  schema: Record<string, unknown>,
   { title, endpoint, typeName, getResponse }: ValidationConfig
 ) {
   const data = await getResponse();
@@ -260,7 +251,7 @@ async function validateResponse(
       for (let j = 0; j < validate.errors.length; j += 1) {
         console.error(validate.errors[j]);
         const dataPath = processPath(validate.errors[j].instancePath);
-        console.error(R.path(dataPath, data));
+        console.error(dataPath);
       }
     }
   }
@@ -269,9 +260,18 @@ async function validateResponse(
 (async function validator() {
   for (let i = 0; i < types.length; i += 1) {
     const currType = types[i];
-    const schema = TJS.generateSchema(program, currType.typeName, settings);
+
+    const generator = createGenerator({
+      path: path.resolve("src/types.ts"),
+      tsconfig: path.resolve("tsconfig.json"),
+      type: currType.typeName,
+      schemaId: `${currType.typeName}Schema`,
+    });
+
+    const schema = generator.createSchema(currType.typeName);
+
     if (schema) {
-      await validateResponse(schema, currType);
+      await validateResponse(schema as Record<string, unknown>, currType);
     } else {
       console.error(`Failed to generate schema for ${currType.typeName}`);
     }

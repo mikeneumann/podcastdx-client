@@ -1,32 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": [
-      "ESNext"
-    ],
-    "esModuleInterop": true,
     "strict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
+    "target": "ES2018",
+    "module": "commonjs",
     "declaration": true,
-    "resolveJsonModule": true
+    "outDir": "./dist",
+    "lib": ["ES2018"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "dist"
-  ],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

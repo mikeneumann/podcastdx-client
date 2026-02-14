@@ -6,7 +6,7 @@ This includes typescript types as well as JSDoc strings that should make interac
 
 Optionally provide usage analytics back to me to help me improve the library. **If you do not provide this value, analytics will be sent. You must opt-out.**
 
-JSON Schema generated from the types contained in the project can be found at <https://github.com/RyanHirsch/podcastdx-client/tree/master/src/schemas>
+JSON Schema generated from the types contained in the project can be found at <https://github.com/mikeneumann/podcastdx-client/tree/master/src/schemas>
 
 ## Installation
 
@@ -16,7 +16,7 @@ npm -i podcastdx-client
 
 ## Usage
 
-Auto-generated docs are available at <https://ryanhirsch.github.io/podcastdx-client/classes/_src_index_.podcastindexclient.html>
+Auto-generated docs are available at <https://mikeneumann.github.io/podcastdx-client/classes/_src_index_.podcastindexclient.html>
 
 ```ts
 import PodcastIndexClient from "podcastdx-client";

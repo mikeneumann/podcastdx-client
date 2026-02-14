@@ -1,51 +1,47 @@
 {
   "title": "`/api/1.0/episodes/byfeedurl` - This call returns all the episodes we know about for this feed, in reverse chronological order.",
-  "type": "object",
-  "properties": {
-    "status": {
-      "type": "string",
-      "enum": [
-        "true"
-      ]
-    },
-    "items": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/PIApiEpisodeInfo"
-      }
-    },
-    "count": {
-      "type": "number"
-    },
-    "query": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false,
-  "required": [
-    "count",
-    "description",
-    "items",
-    "query",
-    "status"
-  ],
+  "$id": "ApiResponse.EpisodesSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/ApiResponse.Episodes",
   "definitions": {
-    "PIApiEpisodeInfo": {
-      "description": "Returned by episodesByFeed*, episodesByItunesId",
+    "ApiResponse.Episodes": {
       "type": "object",
       "properties": {
-        "duration": {
+        "status": {
+          "$ref": "#/definitions/ApiResponse.Status"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PIApiEpisodeInfo"
+          }
+        },
+        "count": {
           "type": "number"
         },
-        "transcriptUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
+        "query": {
+          "type": "string"
         },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "items",
+        "count",
+        "query",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "ApiResponse.Status": {
+      "type": "string",
+      "const": "true"
+    },
+    "PIApiEpisodeInfo": {
+      "type": "object",
+      "properties": {
         "id": {
           "type": "number"
         },
@@ -84,32 +80,32 @@
         },
         "episode": {
           "type": [
-            "null",
-            "number"
+            "number",
+            "null"
           ]
         },
         "episodeType": {
           "type": [
-            "null",
-            "string"
+            "string",
+            "null"
           ]
         },
         "season": {
           "type": "number"
         },
         "image": {
-          "description": "URL to episode image",
-          "type": "string"
+          "type": "string",
+          "description": "URL to episode image"
         },
         "feedItunesId": {
           "type": [
-            "null",
-            "number"
+            "number",
+            "null"
           ]
         },
         "feedImage": {
-          "description": "URL to feed image",
-          "type": "string"
+          "type": "string",
+          "description": "URL to feed image"
         },
         "feedId": {
           "type": "number"
@@ -119,8 +115,8 @@
         },
         "chaptersUrl": {
           "type": [
-            "null",
-            "string"
+            "string",
+            "null"
           ]
         },
         "soundbite": {
@@ -136,12 +132,12 @@
               "type": "string"
             }
           },
-          "additionalProperties": false,
           "required": [
-            "duration",
             "startTime",
+            "duration",
             "title"
-          ]
+          ],
+          "additionalProperties": false
         },
         "soundbites": {
           "type": "array",
@@ -158,16 +154,24 @@
                 "type": "string"
               }
             },
-            "additionalProperties": false,
             "required": [
-              "duration",
               "startTime",
+              "duration",
               "title"
-            ]
+            ],
+            "additionalProperties": false
           }
+        },
+        "duration": {
+          "type": "number"
+        },
+        "transcriptUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
-      "additionalProperties": false,
       "required": [
         "chaptersUrl",
         "dateCrawled",
@@ -192,8 +196,9 @@
         "season",
         "title",
         "transcriptUrl"
-      ]
+      ],
+      "additionalProperties": false,
+      "description": "Returned by episodesByFeed*, episodesByItunesId"
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }

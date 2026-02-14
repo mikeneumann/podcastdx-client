@@ -1,78 +1,61 @@
 {
   "title": "`/api/1.0/search/byperson` - This call returns all of the episodes where the specified person is mentioned.",
-  "type": "object",
-  "properties": {
-    "status": {
-      "type": "string",
-      "enum": [
-        "true"
-      ]
-    },
-    "items": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/PIApiPersonEpisode"
-      }
-    },
-    "count": {
-      "type": "number"
-    },
-    "description": {
-      "type": "string"
-    },
-    "query": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false,
-  "required": [
-    "count",
-    "description",
-    "items",
-    "query",
-    "status"
-  ],
+  "$id": "ApiResponse.SearchPersonSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/ApiResponse.SearchPerson",
   "definitions": {
-    "PIApiPersonEpisode": {
-      "description": "Returned by searchPerson",
+    "ApiResponse.SearchPerson": {
       "type": "object",
       "properties": {
-        "duration": {
+        "status": {
+          "$ref": "#/definitions/ApiResponse.Status"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PIApiPersonEpisode"
+          }
+        },
+        "count": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "items",
+        "count",
+        "description",
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "ApiResponse.Status": {
+      "type": "string",
+      "const": "true"
+    },
+    "PIApiPersonEpisode": {
+      "type": "object",
+      "properties": {
+        "transcriptUrl": {
           "type": [
-            "null",
-            "number"
+            "string",
+            "null"
           ]
         },
-        "feedUrl": {
-          "type": "string"
-        },
-        "feedAuthor": {
-          "type": "string"
-        },
-        "feedTitle": {
-          "type": "string"
-        },
-        "image": {
-          "description": "URL to episode image",
-          "type": "string"
+        "id": {
+          "type": "number"
         },
         "title": {
           "type": "string"
         },
         "link": {
           "type": "string"
-        },
-        "explicit": {
-          "type": "number"
-        },
-        "chaptersUrl": {
-          "type": [
-            "null",
-            "string"
-          ]
-        },
-        "id": {
-          "type": "number"
         },
         "description": {
           "type": "string"
@@ -95,36 +78,49 @@
         "enclosureLength": {
           "type": "number"
         },
+        "explicit": {
+          "type": "number"
+        },
         "episode": {
           "type": [
-            "null",
-            "number"
+            "number",
+            "null"
           ]
         },
         "episodeType": {
           "type": [
-            "null",
-            "string"
+            "string",
+            "null"
           ]
         },
         "season": {
           "type": "number"
         },
+        "image": {
+          "type": "string",
+          "description": "URL to episode image"
+        },
         "feedItunesId": {
           "type": [
-            "null",
-            "number"
+            "number",
+            "null"
           ]
         },
         "feedImage": {
-          "description": "URL to feed image",
-          "type": "string"
+          "type": "string",
+          "description": "URL to feed image"
         },
         "feedId": {
           "type": "number"
         },
         "feedLanguage": {
           "type": "string"
+        },
+        "chaptersUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "soundbite": {
           "type": "object",
@@ -139,12 +135,12 @@
               "type": "string"
             }
           },
-          "additionalProperties": false,
           "required": [
-            "duration",
             "startTime",
+            "duration",
             "title"
-          ]
+          ],
+          "additionalProperties": false
         },
         "soundbites": {
           "type": "array",
@@ -161,22 +157,30 @@
                 "type": "string"
               }
             },
-            "additionalProperties": false,
             "required": [
-              "duration",
               "startTime",
+              "duration",
               "title"
-            ]
+            ],
+            "additionalProperties": false
           }
         },
-        "transcriptUrl": {
+        "duration": {
           "type": [
-            "null",
-            "string"
+            "number",
+            "null"
           ]
+        },
+        "feedUrl": {
+          "type": "string"
+        },
+        "feedAuthor": {
+          "type": "string"
+        },
+        "feedTitle": {
+          "type": "string"
         }
       },
-      "additionalProperties": false,
       "required": [
         "chaptersUrl",
         "dateCrawled",
@@ -203,8 +207,9 @@
         "season",
         "title",
         "transcriptUrl"
-      ]
+      ],
+      "additionalProperties": false,
+      "description": "Returned by searchPerson"
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }
