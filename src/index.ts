@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import fetch from "node-fetch";
+import fetch from "cross-fetch";
 import dotEnv from "dotenv";
 
 import { track, init, register } from "./analytics";

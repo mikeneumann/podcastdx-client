@@ -179,7 +179,7 @@ These are pulled in transitively (not direct dependencies). Monitor package upda
 ### Overview
 This section tracks ongoing maintenance and feature development across chat sessions. Status indicators help resume work without losing context.
 
-**Current Target Version:** 5.9.0  
+**Current Target Version:** 5.9.1  
 **Last Updated:** February 14, 2026  
 **Primary Goals:**
 1. Resolve critical build dependencies (Phases 1-4 in DEPENDENCY_UPGRADE_STRATEGY.md)
@@ -218,26 +218,29 @@ The 18 failing tests in `episodes.test.ts` are caused by API response shape chan
 
 **Next Phase:** Proceed to Phase 2 (Critical Path Migration: node-fetch and dotenv upgrades)
 
-### Phase 2: Critical Dependency Migrations ← **PENDING**
-**Status:** Strategy documented, not yet started  
-**Effort:** 2-3 weeks  
-**Blockers:** Phase 1 completion  
-**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-2-critical-path-migration-weeks-3-4-high-effort)
+### Phase 2: Critical Dependency Migrations ← **IN PROGRESS** 🔄
+**Status:** Phase 2a complete, Phase 2b pending  
+**Effort:** ~1 week remaining (2b: dotenv upgrade)  
+**Blockers:** None  
+**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-2-high-impact-dependencies-week-3-4)
 
 **Subtasks:**
 
-**2a) node-fetch v2 → cross-fetch**
-- Impact: CRITICAL - Breaking change from CommonJS to ESM
-- [ ] Update imports in [src/index.ts](../src/index.ts)
-- [ ] Test with `yarn test` (full test suite)
-- [ ] Validate all HTTP methods (GET, POST)
-- [ ] Update example.ts to match new import syntax
+**2a) node-fetch v2 → cross-fetch** ← **COMPLETED** ✅
+- [x] Update imports in [src/index.ts](../src/index.ts): `node-fetch` → `cross-fetch@^3.1.5`
+- [x] Remove `@types/node-fetch`; cross-fetch has built-in types
+- [x] Test with `yarn test` (full test suite passes; 18 pre-existing episodes.test failures are API schema issues)
+- [x] Validate with `yarn validate` (all HTTP calls to Podcast Index API succeed)
+- [x] Confirmed: Maintains CommonJS compatibility (no ESM migration needed)
+- **Completion Date:** February 14, 2026
+- **Changes:** 2 files modified (package.json + src/index.ts)
 
-**2b) dotenv v8 → v16** 
+**2b) dotenv v8 → v16** ← **PENDING**
 - Impact: HIGH - Multiple breaking API changes
 - [ ] Check usage in development scripts and environment loading
 - [ ] Test: `yarn dev:watch` with new version
 - [ ] Validate: API_KEY, API_SECRET env vars properly loaded
+- **Estimated Effort:** 2-3 hours
 
 ### Phase 3: Tooling & Transitive Dependency Cleanup ← **PENDING**
 **Status:** Strategy documented, not yet started  
