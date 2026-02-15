@@ -28,6 +28,16 @@ interface PIApiEpisodeBase {
   feedId: number;
   feedLanguage: string;
   chaptersUrl: string | null;
+  /** The iTunes type of the feed (episodic, serial, etc). Not always present. */
+  feedItunesType?: string;
+  /** The source URL of the podcast feed. Not returned by all endpoints. */
+  feedUrl?: string;
+  /** The podcast's globally unique identifier. Not returned by all endpoints. */
+  podcastGuid?: string;
+  /** Whether the feed is marked as dead. Not returned by all endpoints. */
+  feedDead?: number;
+  /** Feed ID if this feed is a duplicate. Not returned by all endpoints. */
+  feedDuplicateOf?: number | null;
   soundbite?: {
     startTime: number;
     duration: number;
@@ -49,8 +59,8 @@ export interface PIApiEpisodeDetail extends PIApiEpisodeBase {
 
 /** Returned by episodesByFeed*, episodesByItunesId */
 export interface PIApiEpisodeInfo extends PIApiEpisodeBase {
-  duration: number;
-  transcriptUrl: string | null;
+  duration?: number;
+  transcriptUrl?: string | null;
 }
 
 /** Returned by episodesRandom */
