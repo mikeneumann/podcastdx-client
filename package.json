@@ -30,11 +30,11 @@
   "devDependencies": {
     "@types/debug": "^4.1.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.2.3",
     "@types/node-fetch": "^2.5.8",
     "@types/ramda": "^0.31.1",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.53.1",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
     "auto-changelog": "^2.2.1",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
@@ -49,10 +49,10 @@
     "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
-    "ts-json-schema-generator": "^2.4.0",
+    "ts-json-schema-generator": "^2.5.0",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typedoc": "^0.28.16",
+    "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
   "dependencies": {
