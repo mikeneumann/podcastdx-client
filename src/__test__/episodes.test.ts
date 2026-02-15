@@ -360,13 +360,6 @@ describe("episodes api", () => {
       expect(searchResult.episode).toHaveProperty("description");
     });
 
-    it.skip("single episode shape matches all episodes", async () => {
-      const searchResult = await client.episodeById(episodeId);
-      // TODO: Fix this type!!
-      const { feedTitle, ...episode } = searchResult.episode;
-      expect(episode).toEqual(episodesByFeedId.find((ep) => ep.id === episodeId));
-    });
-
     it("single episode shape matches all episodes", async () => {
       const searchResult = await client.episodeById(randomEpisode.id);
 

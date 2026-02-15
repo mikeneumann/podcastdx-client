@@ -179,8 +179,8 @@ These are pulled in transitively (not direct dependencies). Monitor package upda
 ### Overview
 This section tracks ongoing maintenance and feature development across chat sessions. Status indicators help resume work without losing context.
 
-**Current Target Version:** 5.9.1  
-**Last Updated:** February 14, 2026  
+**Current Target Version:** 5.9.2  
+**Last Updated:** February 15, 2026  
 **Primary Goals:**
 1. Resolve critical build dependencies (Phases 1-4 in DEPENDENCY_UPGRADE_STRATEGY.md)
 2. Add missing API endpoint implementations (based on reference/pi_api_1.12.1.json)
@@ -281,42 +281,53 @@ The 18 failing tests in `episodes.test.ts` are caused by API response shape chan
 
 **Next Phase:** Phase 3B (glob@7.2.3 from Jest) or Phase 4 (Analytics evaluation)
 
-### Missing API Endpoints ← **TO BE CATALOGED**
-**Status:** Not yet started  
-**Reference:** [reference/API_VERSION.md](../reference/API_VERSION.md)
+### Missing API Endpoints ← **COMPLETED** ✅
+**Status:** Cataloging completed February 15, 2026  
+**Effort:** ~2 hours  
+**Result:** 50 total endpoints analyzed; 31 missing endpoints documented  
+**Reference:** [MISSING_ENDPOINTS_CATALOG.md](../MISSING_ENDPOINTS_CATALOG.md)
 
-**Goal:** Identify gaps between published API (pi_api_1.12.1.json) and current client implementations  
-**Approach:** Compare [reference/pi_api_1.12.1.json](../reference/pi_api_1.12.1.json) endpoint list vs. methods in [src/index.ts](../src/index.ts)
+**Coverage Summary:**
+- **Implemented:** 19/50 endpoints (38% coverage)
+- **Missing:** 31/50 endpoints (62% gap)
+- **By Category:**
+  - Search: 2/6 (33%) - Missing: `/search`, `/lookup`, `/bytitle`, `/music/byterm`
+  - Podcasts: 5/9 (56%) - Missing: `/bytag`, `/bymedium`, `/dead`, `/batch/byguid`
+  - Episodes: 6/9 (67%) - Missing: `/byguid`, `/live`
+  - Recent: 4/6 (67%) - Missing: `/newvaluefeeds`, `/data`
+  - Value (V4V): 0/5 (0%) - All monetization endpoints missing
+  - Stats: 1/1 (100%) ✅
+  - Categories: 1/1 (100%) ✅
+  - Hub: 0/1 (0%) - Publisher webhook
+  - Add: 0/2 (0%) - Feed submission endpoints
+  - Static/Tracking: 0/9 (0%) - Data export endpoints
 
-**High-Priority Missing Endpoints (TBD):**
-- [ ] Catalog missing endpoints (run after API comparison)
-- [ ] Define task order (by dependency, frequency of use, complexity)
-- [ ] Create subtask for each endpoint:
-  - Add type to [src/types.ts](../src/types.ts)
-  - Add method to [src/index.ts](../src/index.ts)
-  - Register in [src/schemas/validate.ts](../src/schemas/validate.ts)
-  - Add test in [src/__test__/](../src/__test__/)
+**Detailed Documentation:**
+Comprehensive catalog in [MISSING_ENDPOINTS_CATALOG.md](../MISSING_ENDPOINTS_CATALOG.md) includes:
+- All 31 missing endpoints with full descriptions
+- Authentication requirements per endpoint
+- Query parameters and response types
+- Implementation priority matrix
+- 5-phase development roadmap (Phases 1-5)
+- Cross-references to existing similar endpoints
+- Type definitions needed
+- Next steps for implementation
 
-**Documentation:** [SCHEMA_GENERATION.md](../SCHEMA_GENERATION.md#step-by-step-adding-new-endpoints) outlines the endpoint addition process
+**Implementation Roadmap:**
+1. **Phase 1 (Quick Wins):** 5 endpoints - Search and episodes completeness (2-3 hours)
+2. **Phase 2 (High Value):** 5 endpoints - Podcast discovery features (3-4 hours)
+3. **Phase 3 (Monetization):** 5 endpoints - Value for Value support (4-5 hours)
+4. **Phase 4 (Advanced):** 6 endpoints - Batch operations and publishing (4-5 hours)
+5. **Phase 5 (Data Export):** 9 endpoints - Static files and bulk exports (6-8 hours)
 
-### Immediate Next Steps (Next Session)
-
-1. **Dependency Status Check** 
-   ```powershell
-   yarn outdated
-   ```
-   Determine which upgrades are safe (Phase 1) vs. risky (Phase 2)
-
-2. **Missing Endpoints Inventory**
-   - Parse [reference/pi_api_1.12.1.json](../reference/pi_api_1.12.1.json) for all endpoints
-   - Cross-reference with [src/index.ts](../src/index.ts) methods
-   - Document gaps in a new section or file
-
-3. **Validation Baseline**
-   ```powershell
-   yarn tsc && yarn test && yarn validate
-   ```
-   Establish current state before any upgrades
+**Next Steps (Recommended):**
+1. Review [MISSING_ENDPOINTS_CATALOG.md](../MISSING_ENDPOINTS_CATALOG.md) with team for prioritization
+2. Start Phase 1 implementation (quick wins for core search completeness)
+3. Use [SCHEMA_GENERATION.md](../SCHEMA_GENERATION.md#step-by-step-adding-new-endpoints) as implementation guide
+4. Update types in [src/types.ts](../src/types.ts)
+5. Add methods to [src/index.ts](../src/index.ts)
+6. Register in [src/schemas/validate.ts](../src/schemas/validate.ts)
+7. Add tests in [src/__test__/](../src/__test__/)
 
 ### Known Blockers & Support
 
