@@ -244,17 +244,26 @@ The 18 failing tests in `episodes.test.ts` are caused by API response shape chan
 - **Key Fix:** Quoted `API_SECRET` value containing `#` character (breaking change in v16)
 - **Result:** Test suite improved from 12 passing to 118 passing (90% pass rate)
 
-### Phase 3: Tooling & Transitive Dependency Cleanup ← **PENDING**
-**Status:** Strategy documented, not yet started  
-**Effort:** 1 week  
-**Blockers:** Phase 2 completion  
+### Phase 3: Tooling & Transitive Dependency Cleanup ← **IN PROGRESS** (3A Complete) ✅
+**Status:** Phase 3A completed, Phase 3B partially complete  
+**Effort:** Phase 3A completed (~1 hour on Feb 14, 2026)  
+**Blockers:** None for Phase 3A  
 **Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-3-tooling-optimization-weeks-5-6)
 
-**Tasks:**
-- [ ] Replace `ts-node-dev` with `tsx` in package.json scripts
-- [ ] Verify `glob@7.2.3` no longer in dependency tree
-- [ ] Verify `inflight@1.0.6` eliminated
-- [ ] Test: `yarn dev:watch` launches correctly with tsx
+**3A. Replace ts-node-dev → tsx ← COMPLETED** ✅
+- [x] Removed `ts-node-dev` from package.json
+- [x] Added `tsx@^4.21.0` as dev dependency  
+- [x] Updated scripts: `dev`, `dev:watch`, `validate` to use tsx
+- [x] Test `yarn dev` runs example.ts successfully
+- [x] Build: `yarn build` compiles error-free (1.23s)
+- [x] Lint: `yarn lint` passes (0 errors, 43 warnings)
+- [x] Tests: 118 passing (pre-existing 18 failures unrelated)
+
+**3B. Upgrade test-exclude ← PARTIALLY COMPLETE**
+- [x] Upgraded `test-exclude` to v7.0.1 (uses `glob@10.4.1`)
+- [⚠️] Remaining: `babel-plugin-istanbul@7.0.1` → `glob@7.2.3` (Jest internal)
+  - Cannot remove without replacing Jest itself
+  - Does not impact build/test functionality
 
 ### Phase 4: Analytics & Optional Upgrades ← **PENDING**
 **Status:** Strategy documented, deferred  
@@ -265,11 +274,12 @@ The 18 failing tests in `episodes.test.ts` are caused by API response shape chan
 **Decision Required:** Keep Mixpanel (outdated), migrate to Segment, or use PostHog?  
 **Recommendation:** Defer until after v6.0.0 release
 
-### Phase 3: Transitive Dependency Cleanup ← **NEXT**
-**Status:** Ready to start (Phases 1-2 complete)  
-**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-3-transitive-dependencies--tooling-week-5-6)
+### Phase 3A: Transitive Dependency Cleanup - Complete ✅
+**Status:** Completed February 14, 2026  
+**Effort:** ~1 hour (Much faster than estimated 1 week)
+**Result:** Successfully eliminated most deprecated glob@7.2.3 sources
 
-**Next Task:** Replace `ts-node-dev` with `tsx` to eliminate deprecated `glob@7.2.3`
+**Next Phase:** Phase 3B (glob@7.2.3 from Jest) or Phase 4 (Analytics evaluation)
 
 ### Missing API Endpoints ← **TO BE CATALOGED**
 **Status:** Not yet started  

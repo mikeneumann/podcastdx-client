@@ -12,14 +12,13 @@ The project has **critical and moderate-risk dependencies** that require a phase
 - ✅ Phase 1: TypeScript ecosystem upgrades (Feb 14, 2026)
 - ✅ Phase 2a: node-fetch → cross-fetch migration (Feb 14, 2026)
 - ✅ Phase 2b: dotenv upgrade (Feb 14, 2026)
-- ✅ Phase 3: Transitive dependency cleanup (Feb 14, 2026)
-  - ✅ Phase 3A: ts-node-dev → tsx migration completed
-  - ✅ Phase 3B: test-exclude upgrade completed
+- ✅ Phase 3A: ts-node-dev → tsx migration (Feb 14, 2026)
+- ✅ Phase 3B: test-exclude upgrade (Feb 14, 2026)
 - ⏳ Phase 4: Analytics library evaluation (deferred)
 
 **Remaining Primary Concerns:**
-1. **High Risk:** `mixpanel@^0.13.0` (unmaintained, consider alternatives)
-2. **Unavoidable Transitive Issue:** `glob@7.2.3` from Jest internals (babel-plugin-istanbul) - cannot be removed without replacing Jest
+1. **High Risk:** `mixpanel@^0.13.0` (unmaintained, consider alternatives for Phase 4)
+2. **Unavoidable Transitive:** `glob@7.2.3` from Jest internals (babel-plugin-istanbul) - cannot be removed without replacing Jest itself; minimal risk (test instrumentation only)
 
 ---
 
@@ -166,10 +165,11 @@ The project has **critical and moderate-risk dependencies** that require a phase
 
 ---
 
-### Phase 3: Transitive Dependencies & Tooling (Week 5-6) ✅ COMPLETED
+### Phase 3: Transitive Dependencies & Tooling (Week 5-6) ✅ SUBSTANTIALLY COMPLETE
 **Goal:** Eliminate deprecated transitive dependencies  
 **Completion Date:** February 14, 2026  
 **Effort:** ~1 hour (completed in single session)
+**Status:** Phase 3A & 3B both completed. Primary deprecated sources eliminated. One unavoidable source remains (Jest internal).
 
 #### 3A. Replace `ts-node-dev` → `tsx` ✅ COMPLETED
 
@@ -215,7 +215,11 @@ glob versions in project:
   - Impact: Minimal - only used for test instrumentation
   - Workaround: Would require replacing Jest itself (not recommended)
 
-**Conclusion:** Phase 3 successfully eliminated most deprecated glob sources. The remaining `glob@7.2.3` from Jest internals (babel-plugin-istanbul) cannot be removed without major Jest replacement and poses minimal risk as it's only used for test instrumentation.
+**Conclusion:** Phase 3 successfully eliminated the primary deprecated glob@7.2.3 sources:
+- ✅ Removed ts-node-dev (was pulling glob@7.2.3)
+- ✅ Upgraded test-exclude to v7.0.1 (now uses glob@10.4.1)
+
+The remaining `glob@7.2.3` is sourced from `babel-plugin-istanbul@7.0.1` (Jest's internal test instrumentation) and cannot be eliminated without replacing Jest entirely. This poses minimal risk as it only affects test execution, not production code or library functionality. This is an acceptable trade-off to maintain Jest compatibility.
 
 ---
 
