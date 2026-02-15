@@ -4,9 +4,9 @@ The is a client for interacting with <https://podcastindex.org/>. In order for t
 
 This includes typescript types as well as JSDoc strings that should make interacting with the API easier.
 
-Optionally provide usage analytics back to me to help me improve the library. **If you do not provide this value, analytics will be sent. You must opt-out.**
+Optionally provide usage analytics back to Ryan to help Ryan improve the library. **If you do not provide this value, analytics will be sent. You must opt-out.**
 
-JSON Schema generated from the types contained in the project can be found at <https://github.com/mikeneumann/podcastdx-client/tree/master/src/schemas>
+JSON Schema generated from the types contained in the project can be found at <https://github.com/mikeneumann/podcastdx-client/tree/master/src/schemas>. See [Schema Generation](SCHEMA_GENERATION.md) for detailed documentation on how schemas are generated and maintained.
 
 ## Installation
 
@@ -53,4 +53,4 @@ client.episodeById(16795106).then(console.log);
 
 ## Community
 
-Join on Discord at <https://discord.gg/d6apPvR3N6> or on <https://podcastindex.social/>
+Join the conversation at <https://podcastindex.social/>

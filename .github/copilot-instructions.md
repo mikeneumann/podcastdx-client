@@ -173,3 +173,133 @@ Use this when:
 - **`glob@7.2.3`** - Versions prior to v9 no longer supported. Monitor upgrade paths for packages pulling this as a transitive dependency
 
 These are pulled in transitively (not direct dependencies). Monitor package updates and consider bumping major versions of dependencies that use these packages when upgrading becomes necessary for security/stability reasons.
+
+## Active Work Plan
+
+### Overview
+This section tracks ongoing maintenance and feature development across chat sessions. Status indicators help resume work without losing context.
+
+**Current Target Version:** 5.9.0  
+**Last Updated:** February 14, 2026  
+**Primary Goals:**
+1. Resolve critical build dependencies (Phases 1-4 in DEPENDENCY_UPGRADE_STRATEGY.md)
+2. Add missing API endpoint implementations (based on reference/pi_api_1.12.1.json)
+
+### Phase 1: TypeScript Family Upgrades ← **IN PROGRESS**
+**Status:** Planned, not yet started  
+**Effort:** 1-2 weeks  
+**Blockers:** None  
+**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-1-typescript-ecosystem-upgrades-weeks-1-2)
+
+**Tasks:**
+- [ ] Upgrade: `typescript@5.9.3` → `latest`
+- [ ] Upgrade: `@types/node`, `@types/jest`, `@types/debug` → latest
+- [ ] Run: `yarn tsc && yarn test && yarn lint` to validate
+- [ ] Update: tsconfig files if breaking changes detected
+- [ ] Document: Any changes to type inference or behavior
+
+**Next Step:** Run `yarn outdated` to check available upgrades; start with safe peer dependencies
+
+### Phase 2: Critical Dependency Migrations ← **PENDING**
+**Status:** Strategy documented, not yet started  
+**Effort:** 2-3 weeks  
+**Blockers:** Phase 1 completion  
+**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-2-critical-path-migration-weeks-3-4-high-effort)
+
+**Subtasks:**
+
+**2a) node-fetch v2 → cross-fetch**
+- Impact: CRITICAL - Breaking change from CommonJS to ESM
+- [ ] Update imports in [src/index.ts](../src/index.ts)
+- [ ] Test with `yarn test` (full test suite)
+- [ ] Validate all HTTP methods (GET, POST)
+- [ ] Update example.ts to match new import syntax
+
+**2b) dotenv v8 → v16** 
+- Impact: HIGH - Multiple breaking API changes
+- [ ] Check usage in development scripts and environment loading
+- [ ] Test: `yarn dev:watch` with new version
+- [ ] Validate: API_KEY, API_SECRET env vars properly loaded
+
+### Phase 3: Tooling & Transitive Dependency Cleanup ← **PENDING**
+**Status:** Strategy documented, not yet started  
+**Effort:** 1 week  
+**Blockers:** Phase 2 completion  
+**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-3-tooling-optimization-weeks-5-6)
+
+**Tasks:**
+- [ ] Replace `ts-node-dev` with `tsx` in package.json scripts
+- [ ] Verify `glob@7.2.3` no longer in dependency tree
+- [ ] Verify `inflight@1.0.6` eliminated
+- [ ] Test: `yarn dev:watch` launches correctly with tsx
+
+### Phase 4: Analytics & Optional Upgrades ← **PENDING**
+**Status:** Strategy documented, deferred  
+**Effort:** 2+ weeks  
+**Blockers:** None (low priority)  
+**Reference:** [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md#phase-4-analytics-library-evaluation-weeks-7-8-optional)
+
+**Decision Required:** Keep Mixpanel (outdated), migrate to Segment, or use PostHog?  
+**Recommendation:** Defer until after v6.0.0 release
+
+### Missing API Endpoints ← **TO BE CATALOGED**
+**Status:** Not yet started  
+**Reference:** [reference/API_VERSION.md](../reference/API_VERSION.md)
+
+**Goal:** Identify gaps between published API (pi_api_1.12.1.json) and current client implementations  
+**Approach:** Compare [reference/pi_api_1.12.1.json](../reference/pi_api_1.12.1.json) endpoint list vs. methods in [src/index.ts](../src/index.ts)
+
+**High-Priority Missing Endpoints (TBD):**
+- [ ] Catalog missing endpoints (run after API comparison)
+- [ ] Define task order (by dependency, frequency of use, complexity)
+- [ ] Create subtask for each endpoint:
+  - Add type to [src/types.ts](../src/types.ts)
+  - Add method to [src/index.ts](../src/index.ts)
+  - Register in [src/schemas/validate.ts](../src/schemas/validate.ts)
+  - Add test in [src/__test__/](../src/__test__/)
+
+**Documentation:** [SCHEMA_GENERATION.md](../SCHEMA_GENERATION.md#step-by-step-adding-new-endpoints) outlines the endpoint addition process
+
+### Immediate Next Steps (Next Session)
+
+1. **Dependency Status Check** 
+   ```powershell
+   yarn outdated
+   ```
+   Determine which upgrades are safe (Phase 1) vs. risky (Phase 2)
+
+2. **Missing Endpoints Inventory**
+   - Parse [reference/pi_api_1.12.1.json](../reference/pi_api_1.12.1.json) for all endpoints
+   - Cross-reference with [src/index.ts](../src/index.ts) methods
+   - Document gaps in a new section or file
+
+3. **Validation Baseline**
+   ```powershell
+   yarn tsc && yarn test && yarn validate
+   ```
+   Establish current state before any upgrades
+
+### Known Blockers & Support
+
+- **blocker-1:** None currently identified
+- **decision-required:** Mixpanel retention vs. migration strategy
+- **support-needed:** If Phase 2b (node-fetch) encounters CommonJS/ESM interop issues, may need to defer to Phase 4 or consider hybrid approach
+
+### References
+- Strategy Documents:
+  - [DEPENDENCY_UPGRADE_STRATEGY.md](../DEPENDENCY_UPGRADE_STRATEGY.md) - 4-phase maintenance roadmap
+  - [SCHEMA_GENERATION.md](../SCHEMA_GENERATION.md) - Endpoint development workflow
+  - [reference/API_VERSION.md](../reference/API_VERSION.md) - Current API version (1.12.1)
+- Key Files:
+  - [src/index.ts](../src/index.ts) - Client implementation
+  - [src/types.ts](../src/types.ts) - TypeScript type definitions
+  - [src/schemas/validate.ts](../src/schemas/validate.ts) - Schema validation config
+  - [package.json](../package.json) - Dependency declarations
+
+## Development Environment
+
+**IMPORTANT:** This project uses **Windows PowerShell** as the terminal environment. 
+- **Do NOT use Bash commands** (e.g., `grep`, `sed`, `awk`, `bash -c`, etc.)
+- **Use PowerShell equivalents** (e.g., `Select-String`, `Where-Object`, `Get-ChildItem`)
+- Terminal commands must be compatible with PowerShell syntax
+- When running commands with `run_in_terminal`, ensure they work in PowerShell context
