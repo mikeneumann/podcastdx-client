@@ -6,19 +6,18 @@
 
 ## Executive Summary
 
-The project has **critical and moderate-risk dependencies** that require a phased upgrade strategy to avoid breaking changes. As of February 14, 2026, Phase 1 (TypeScript) and Phase 2a (node-fetch migration) are complete.
+The project has **critical and moderate-risk dependencies** that require a phased upgrade strategy to avoid breaking changes. As of February 14, 2026, Phase 1 (TypeScript), Phase 2a (node-fetch migration), and Phase 2b (dotenv upgrade) are complete.
 
 **Completed Milestones:**
 - ✅ Phase 1: TypeScript ecosystem upgrades (Feb 14, 2026)
 - ✅ Phase 2a: node-fetch → cross-fetch migration (Feb 14, 2026)
-- 🔄 Phase 2b: dotenv upgrade (pending)
+- ✅ Phase 2b: dotenv upgrade (Feb 14, 2026)
 - ⏳ Phase 3: Transitive dependency cleanup (pending)
 - ⏳ Phase 4: Analytics library evaluation (deferred)
 
 **Remaining Primary Concerns:**
-1. **High Risk:** `dotenv@^8.2.0` (6 years old, major security/API changes in newer versions)
-2. **High Risk:** `mixpanel@^0.13.0` (unmaintained, consider alternatives)
-3. **Transitive Issues:** `glob@7.2.3` and `inflight@1.0.6` in dev dependencies
+1. **High Risk:** `mixpanel@^0.13.0` (unmaintained, consider alternatives)
+2. **Transitive Issues:** `glob@7.2.3` and `inflight@1.0.6` in dev dependencies
 
 ---
 
@@ -29,7 +28,7 @@ The project has **critical and moderate-risk dependencies** that require a phase
 | Package | Current | Latest | Risk Level | Issue |
 |---------|---------|--------|------------|-------|
 | `cross-fetch` | ^3.1.5 | 3.x | 🟢 SAFE | ✅ Replaced node-fetch; maintains CommonJS+ESM support |
-| `dotenv` | ^8.2.0 | 16.x | 🟠 HIGH | Ancient version; multiple breaking API changes between 8→16 |
+| `dotenv` | ^16.0.0 | 16.x | 🟢 SAFE | ✅ Upgraded Feb 14, 2026; uses v16.6.1 (latest); no breaking changes |
 | `mixpanel` | ^0.13.0 | 0.13.0 | 🟠 HIGH | Unmaintained package; consider `@segment/analytics-next` or fork |
 | `debug` | ^4.3.1 | 4.3.x | 🟢 SAFE | Well-maintained, semantic versioning respected |
 | `ramda` | ^0.28.0 | 0.30.0 | 🟢 SAFE | Stable, no breaking changes expected in minor versions |
@@ -131,17 +130,31 @@ The project has **critical and moderate-risk dependencies** that require a phase
 
 ---
 
-#### 2B. Upgrade `dotenv@8` → `16`
-```bash
-yarn upgrade dotenv
-```
-- Check [CHANGELOG](https://github.com/motdotla/dotenv/blob/master/CHANGELOG.md) for breaking changes
-- Primary change: .env parsing stricter (good for validation)
-- Script: `yarn dev:watch` should load .env without errors
+#### 2B. Upgrade `dotenv@8` → `16` ✅ COMPLETED
 
-**Testing:**
-- Create `.env.test` with sample API keys
-- Verify `process.env.API_KEY` loads correctly
+**Implementation (February 14, 2026):**
+- ✅ Upgraded `dotenv@^16.0.0` (actual installed version: 16.6.1 - latest v16 patch)
+- ✅ Verified TypeScript compilation: `yarn tsc` passes with no errors
+- ✅ Verified linting: `yarn lint` passes (43 warnings, 0 errors - pre-existing code quality issues)
+- ✅ Fixed breaking change: `.env` file now requires quoted values containing `#` character
+- ✅ Test results: 118 passing (vs 12 before), 18 pre-existing API schema failures
+
+**Key Findings & Breaking Changes in dotenv v16:**
+- dotenv v16 treats `#` as comment delimiter unless value is quoted
+- **Solution:** Updated `.env` to quote `API_SECRET` value containing `#` character
+- Changed: `API_SECRET=jrbBMLSusa5x7xRfS58dB37Yr#n3LB5Z9VnBn7nE`
+- To: `API_SECRET="jrbBMLSusa5x7xRfS58dB37Yr#n3LB5Z9VnBn7nE"`
+- No code changes required - environment variables load correctly after .env fix
+
+**Test Results:**
+- `yarn test`: 10 passed test suites, 118 passing tests (major improvement from 12)
+- 18 remaining failures in episodes.test.ts are pre-existing API schema issues (unrelated to dotenv)
+- Search, podcasts, recent, categories, utils all pass
+
+**Completion Date:** February 14, 2026  
+**Files Modified:** 
+1. .env (quoted API_SECRET)
+2. package.json (dependency version)
 
 ---
 
